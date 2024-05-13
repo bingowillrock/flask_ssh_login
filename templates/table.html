@@ -29,11 +29,11 @@
         </tbody>
     </table>
     <script>
-        function openSSH(routerName, portNumber) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/ssh?router_name=' + routerName + '&port_number=' + portNumber, true);
-        xhr.send();
-    }
+    //     function openSSH(routerName, portNumber) {
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open('GET', '/ssh?router_name=' + routerName + '&port_number=' + portNumber, true);
+    //     xhr.send();
+    // }
 
 
         // function openSSH(routerName, number) {
@@ -55,11 +55,11 @@
         //     window.open('data:text/html;charset=utf-8,' + escape(terminalCommand));
         // }
 
-        // function openSSH(routerName, number) {
-        //     // Assuming PowerShell command to initiate SSH session is 'ssh-command'
-        //     var command = `ssh-command ${routerName} ${number}`;
-        //     window.open('powershell://' + command);
-        // }
+        function openSSH(routerName, number) {
+            // Assuming PowerShell command to initiate SSH session is 'ssh-command'
+            var command = `ssh-command ${routerName} ${number}`;
+            window.open('powershell://' + command);
+        }
     </script>
 </body>
 </html>

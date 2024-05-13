@@ -42,5 +42,16 @@ def ssh():
     return '', 204
 
 
+# Route for initiating SSH session
+@app.route('/initiate_ssh', methods=['POST'])
+def initiate_ssh():
+    ip_address = request.form['ip_address']
+    port_number = request.form['port_number']
+    # You can customize this command as per your requirements
+    command = f"powershell Start-Process ssh -ArgumentList 'username@{ip_address} -p {port_number}'"
+    subprocess.Popen(command, shell=True)
+    return 'SSH session initiated successfully'
+
+
 if __name__ == '__main__':
     app.run(debug=True)
