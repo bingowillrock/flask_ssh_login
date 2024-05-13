@@ -1,0 +1,26 @@
+<!-- table_b.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Table B</title>
+</head>
+<body>
+    <h1>Table B</h1>
+    <table border="1">
+        <tr>
+            <th>S.No</th>
+            <th>Router Name</th>
+            <th>Number</th>
+            <th>Action</th>
+        </tr>
+        {% for row in data %}
+        <tr>
+            <td>{{ row['sno'] }}</td>
+            <td>{{ row['router name'] }}</td>
+            <td>{{ row['number'] }}</td>
+            <td><form action="/initiate_ssh" method="post"><input type="hidden" name="ip_address" value="192.168.2.1"><input type="hidden" name="port_number" value="{{ row['number'] }}"><input type="submit" value="Initiate SSH"></form></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

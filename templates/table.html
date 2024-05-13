@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table {{ table }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Table {{ table }}</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Sno</th>
+                <th>Router Name</th>
+                <th>Number</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ row['sno'] }}</td>
+                <td>{{ row['router name'] }}</td>
+                <td>{{ row['number'] }}</td>
+                <td><button onclick="openSSH('{{ row['router name'] }}', '{{ row['number'] }}')">SSH</button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        function openSSH(routerName, portNumber) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/ssh?router_name=' + routerName + '&port_number=' + portNumber, true);
+        xhr.send();
+    }
+
+
+        // function openSSH(routerName, number) {
+        //     var command = `gnome-terminal -- ssh ${routerName} -p ${number}`;
+        //     window.open('bash://' + command);
+        // }
+
+        //  function openSSH(routerName, number) {
+        // // Assuming command to initiate SSH session is 'ssh-command'
+        //     var command = `ssh ${routerName} -p ${number}`;
+        //     var terminalCommand = 'xterm -e "' + command + '"';
+        //     window.open('data:text/html;charset=utf-8,' + escape(terminalCommand));
+        // }
+
+        // function openSSH(routerName, number) {
+        // // Assuming PowerShell command to initiate SSH session is 'ssh-command'
+        //     var command = `ssh ${routerName} -p ${number}`;
+        //     var terminalCommand = 'powershell.exe -Command "' + command + '"';
+        //     window.open('data:text/html;charset=utf-8,' + escape(terminalCommand));
+        // }
+
+        // function openSSH(routerName, number) {
+        //     // Assuming PowerShell command to initiate SSH session is 'ssh-command'
+        //     var command = `ssh-command ${routerName} ${number}`;
+        //     window.open('powershell://' + command);
+        // }
+    </script>
+</body>
+</html>
