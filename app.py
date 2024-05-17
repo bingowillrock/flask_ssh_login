@@ -34,15 +34,6 @@ def table_b():
     data = read_csv('table_b.csv')
     return render_template('table.html', data=data, table='B', username=USERNAME, active_page='table_b')
 
-@app.route('/ssh')
-def ssh():
-    router_name = request.args.get('router_name')
-    port_number = request.args.get('port_number')
-    # Assuming the SSH command is in the format: ssh <router_name> -p <port_number>
-    ssh_command = f'ssh {router_name} -p {port_number}'
-    subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', ssh_command])
-    return '', 204
-
 # Route for initiating SSH session
 @app.route('/initiate_ssh', methods=['POST'])
 def initiate_ssh():

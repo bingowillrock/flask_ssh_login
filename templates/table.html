@@ -1,98 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Table {{ table }}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            display: flex;
-        }
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            background-color: #343a40;
-            padding-top: 20px;
-            color: white;
-        }
-        .sidebar a {
-            padding: 10px 15px;
-            text-decoration: none;
-            color: white;
-            display: block;
-        }
-        .sidebar a.active {
-            background-color: #007bff;
-        }
-        .sidebar a:hover {
-            background-color: #007bff;
-        }
-        .content {
-            margin-left: 250px;
-            padding: 20px;
-            width: calc(100% - 250px);
-        }
-        .username {
-            position: absolute;
-            bottom: 10px;
-            left: 15px;
-        }
-        .table thead th{
-            text-align: center;
-            vertical-align: middle;
-        }
+{% extends "base.html" %}
 
-        .table tbody td{
-            text-align: center;
-            vertical-align: middle;
-        }
+{% block title %}Table {{ table }}{% endblock %}
 
-    </style>
-</head>
-<body>
-    <div class="sidebar">
-        <h2 class="text-center">Website Name</h2>
-        <a href="/" class="{{ 'active' if active_page == 'home' else '' }}">Home</a>
-        <a href="/table_a" class="{{ 'active' if active_page == 'table_a' else '' }}">Table A</a>
-        <a href="/table_b" class="{{ 'active' if active_page == 'table_b' else '' }}">Table B</a>
-        <div class="username">
-            <p>Logged in as: {{ username }}</p>
-        </div>
-    </div>
-    <div class="content">
-        <h1>Table {{ table }}</h1>
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>S.No</th>
-                        <th>Router Name</th>
-                        <th>Number</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in data %}
-                    <tr>
-                        <td>{{ row['sno'] }}</td>
-                        <td>{{ row['router name'] }}</td>
-                        <td>{{ row['number'] }}</td>
-                        <td>
-                            <form action="/initiate_ssh" method="post">
-                                <input type="hidden" name="ip_address" value="{{ '192.168.1.1' if table == 'A' else '192.168.2.1' }}">
-                                <input type="hidden" name="port_number" value="{{ row['number'] }}">
-                                <input type="submit" value="Initiate SSH" class="btn btn-primary">
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</body>
-</html>
+{% block content %}
+<h1>Table {{ table }}</h1>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Router Name</th>
+                <th>Number</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ row['sno'] }}</td>
+                <td>{{ row['router name'] }}</td>
+                <td>{{ row['number'] }}</td>
+                <td>
+                    <form action="/initiate_ssh" method="post">
+                        <input type="hidden" name="ip_address" value="{{ '192.168.1.1' if table == 'A' else '192.168.2.1' }}">
+                        <input type="hidden" name="port_number" value="{{ row['number'] }}">
+                        <input type="submit" value="Initiate SSH" class="btn btn-primary">
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
