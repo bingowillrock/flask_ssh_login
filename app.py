@@ -18,19 +18,21 @@ def read_csv(filename):
 @app.route('/')
 def index():
     username = os.getlogin()  # Get the username of the currently logged in user
-    return render_template('index.html', username=username)
+    return render_template('index.html', username=username, active_page='home')
 
 # Route for Table A
 @app.route('/table_a')
 def table_a():
     data = read_csv('table_a.csv')
-    return render_template('table.html', data=data, table='A')
+    username = os.getlogin()
+    return render_template('table.html', data=data, table='A', username=username, active_page='table_a')
 
 # Route for Table B
 @app.route('/table_b')
 def table_b():
     data = read_csv('table_b.csv')
-    return render_template('table.html', data=data, table='B')
+    username = os.getlogin()
+    return render_template('table.html', data=data, table='B', username=username, active_page='table_b')
 
 @app.route('/ssh')
 def ssh():
@@ -41,7 +43,6 @@ def ssh():
     subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', ssh_command])
     return '', 204
 
-
 # Route for initiating SSH session
 @app.route('/initiate_ssh', methods=['POST'])
 def initiate_ssh():
@@ -51,7 +52,6 @@ def initiate_ssh():
     command = f"powershell Start-Process ssh -ArgumentList 'username@{ip_address} -p {port_number}'"
     subprocess.Popen(command, shell=True)
     return 'SSH session initiated successfully'
-
 
 if __name__ == '__main__':
     app.run(debug=True)
