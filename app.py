@@ -5,6 +5,9 @@ import subprocess
 
 app = Flask(__name__)
 
+# Get the username of the currently logged in user
+USERNAME = os.getlogin()
+
 # Function to read CSV file and return data as a list of dictionaries
 def read_csv(filename):
     data = []
@@ -17,22 +20,19 @@ def read_csv(filename):
 # Route for the home page
 @app.route('/')
 def index():
-    username = os.getlogin()  # Get the username of the currently logged in user
-    return render_template('index.html', username=username, active_page='home')
+    return render_template('index.html', username=USERNAME, active_page='home')
 
 # Route for Table A
 @app.route('/table_a')
 def table_a():
     data = read_csv('table_a.csv')
-    username = os.getlogin()
-    return render_template('table.html', data=data, table='A', username=username, active_page='table_a')
+    return render_template('table.html', data=data, table='A', username=USERNAME, active_page='table_a')
 
 # Route for Table B
 @app.route('/table_b')
 def table_b():
     data = read_csv('table_b.csv')
-    username = os.getlogin()
-    return render_template('table.html', data=data, table='B', username=username, active_page='table_b')
+    return render_template('table.html', data=data, table='B', username=USERNAME, active_page='table_b')
 
 @app.route('/ssh')
 def ssh():
