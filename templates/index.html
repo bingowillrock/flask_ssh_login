@@ -3,6 +3,68 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1>Welcome, {{ username }}!</h1>
-<p>This is the home page.</p>
+
+
+<!-- <h1 class="text-center my-4">Welcome, {{ username }}</h1> -->
+<h1 class="text-center my-4">{{ greeting }}, {{ username }}</h1>
+
+
+<div class="table-responsive">
+    <h2 class="text-center my-4">Login Attempts</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>SNo</th>
+                    <th>Date Time</th>
+                    <th>Username</th>
+                    <th>User IP Address</th>
+                    <th>PuTTY IP Address</th>
+                    <th>Port</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in log_data %}
+                <tr>
+                    <td>{{ log[0] }}</td>
+                    <td>{{ log[1] }}</td>
+                    <td>{{ log[2] }}</td>
+                    <td>{{ log[3] }}</td>
+                    <td>{{ log[4] }}</td>
+                    <td>{{ log[5] }}</td>
+                    <td>{{ log[6] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+</div>
+
+<form id="logForm" method="POST" action="/log_attempt" style="display:none;">
+    <input type="hidden" name="username">
+    <input type="hidden" name="putty_ip">
+    <input type="hidden" name="port">
+    <input type="hidden" name="status">
+</form>
+
+<script>
+    function openPuTTY(username, ip, port) {
+        // Construct the SSH URI with proper encoding
+        var uri = "ssh://" + username + "@" + ip + " -P " + port;
+
+        // Attempt to open PuTTY using the SSH URI
+        window.location.href = uri;
+
+        // Log the attempt
+        logAttempt(username, ip, port, "success");
+    }
+
+    function logAttempt(username, ip, port, status) {
+        var form = document.getElementById('logForm');
+        form.username.value = username;
+        form.putty_ip.value = ip;
+        form.port.value = port;
+        form.status.value = status;
+        form.submit();
+    }
+</script>
 {% endblock %}

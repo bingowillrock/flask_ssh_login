@@ -19,17 +19,47 @@
             <tr>
                 <td>{{ row['sno'] }}</td>
                 <td>{{ row['router name'] }}</td>
-                <td>{{ row['number'] }}</td>
+                <td>{{ row['port'] }}</td>
                 <td>
-                    <form action="/initiate_ssh" method="post">
+                    <!-- <form action="/initiate_ssh" method="post">
                         <input type="hidden" name="ip_address" value="{{ '192.168.1.1' if table == 'A' else '192.168.2.1' }}">
                         <input type="hidden" name="port_number" value="{{ row['number'] }}">
                         <input type="submit" value="Initiate SSH" class="btn btn-primary">
-                    </form>
+                    </form> -->
+                    <button onclick="openPuTTY('{{ username }}', '192.168.1.1', '{{ row['port'] }}')">Open PuTTY</button>
                 </td>
+                
             </tr>
+
             {% endfor %}
         </tbody>
     </table>
+    <form id="logForm" method="POST" action="/log_attempt" style="display:none;">
+        <input type="hidden" name="username">
+        <input type="hidden" name="putty_ip">
+        <input type="hidden" name="port">
+        <input type="hidden" name="status">
+    </form>
+    <script>
+        function openPuTTY(username, ip, port) {
+            // Construct the SSH URI with proper encoding
+            var uri = "ssh://" + username + "@" + ip + " -P " + port;
+
+            // Attempt to open PuTTY using the SSH URI
+            window.location.href = uri;
+
+            // Log the attempt
+            logAttempt(username, ip, port, "success");
+        }
+
+        function logAttempt(username, ip, port, status) {
+            var form = document.getElementById('logForm');
+            form.username.value = username;
+            form.putty_ip.value = ip;
+            form.port.value = port;
+            form.status.value = status;
+            form.submit();
+        }
+    </script>
 </div>
 {% endblock %}
