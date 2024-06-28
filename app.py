@@ -67,7 +67,7 @@ def log_attempt():
     with open(LOG_FILE, 'a') as file:
         file.write(f"{timestamp},{username},{user_ip},{putty_ip},{port},{status}\n")
 
-    return 'Logged'
+    return ("", 204)
 
 
 
