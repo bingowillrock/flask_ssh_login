@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
     <style>
         body {
             display: flex;
@@ -54,7 +55,20 @@
         <a href="/table_a" class="{{ 'active' if active_page == 'table_a' else '' }}">Table A</a>
         <a href="/table_b" class="{{ 'active' if active_page == 'table_b' else '' }}">Table B</a>
         <div class="username">
-            <p>Logged in as: {{ username }}</p>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" disabled>
+            <button id="usernameButton" onclick="editOrSaveUsername()">Edit Username</button>
+
+            <!-- <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" disabled>
+                <button id="usernameButton" onclick="editOrSaveUsername()">Edit Username</button>
+            </div> -->
+            <!-- <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username">
+                <button onclick="saveUsername()">Save Username</button>
+            </div> -->
         </div>
     </div>
     <div class="content">

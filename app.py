@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import csv
 import os
 import subprocess
@@ -7,8 +7,15 @@ import datetime
 app = Flask(__name__)
 
 # Get the username of the currently logged in user
-USERNAME = os.getlogin()
+global_username = None
 LOG_FILE = 'login_attempts.log'
+
+
+
+ip_add = { 'table_A': '1.1.1.1',
+            'table_B': '2.2.2.2'
+            }
+
 
 # Greeting Function 
 def get_greeting():
@@ -27,10 +34,22 @@ def read_csv(filename):
             data.append(row)
     return data
 
-# Route for the home page
-# @app.route('/')
-# def index():
-#     return render_template('index.html', username=USERNAME, active_page='home')
+
+@app.route('/login', methods=['POST'])
+def login():
+    session['username'] = request.form['username']
+    return redirect(url_for('index'))
+
+
+# Function to set the global username
+def set_global_username(username):
+    global global_username
+    global_username = username
+    print(f"Global username set to: {global_username}")
+
+# Function to get the global username
+def get_global_username():
+    return global_username
 
 @app.route('/')
 def index():
@@ -47,9 +66,18 @@ def index():
 
     username = os.getlogin()
     greeting = get_greeting()  # Get the greeting based on the current time
-    return render_template('index.html', username=USERNAME, active_page='home', log_data=log_data_with_index, greeting=greeting)
+    return render_template('index.html', username=global_username, active_page='home', log_data=log_data_with_index, greeting=greeting)
     # return render_template('index.html', data=data, username=USERNAME, active_page='home', log_data=log_data)
 
+@app.route('/set_username', methods=['POST'])
+def set_username():
+    data = request.get_json()
+    username = data.get('username')
+    if username:
+        set_global_username(username)
+        return jsonify(success=True), 200
+    else:
+        return jsonify(success=False), 400
 
 # Function to record loggig attempts.
 @app.route('/log_attempt', methods=['POST'])
@@ -67,31 +95,21 @@ def log_attempt():
     with open(LOG_FILE, 'a') as file:
         file.write(f"{timestamp},{username},{user_ip},{putty_ip},{port},{status}\n")
 
-    return ("", 204)
-
-
+    return 'Logged'
 
 # Route for Table A
 @app.route('/table_a')
 def table_a():
-    data = read_csv('table_a.csv')
-    return render_template('table.html', data=data, table='A', username=USERNAME, active_page='table_a')
+    data = read_csv('db/table_a.csv')
+    return render_template('table.html', data=data, table='A', ip = '1.1.1.1', username=global_username, active_page='table_a')
+
 
 # Route for Table B
 @app.route('/table_b')
 def table_b():
-    data = read_csv('table_b.csv')
-    return render_template('table.html', data=data, table='B', username=USERNAME, active_page='table_b')
+    data = read_csv('db/table_b.csv')
+    return render_template('table.html', data=data, table='B', ip= 'bandit.labs.overthewire.org', username=global_username, active_page='table_b')
 
-# Route for initiating SSH session
-# @app.route('/initiate_ssh', methods=['POST'])
-# def initiate_ssh():
-#     ip_address = request.form['ip_address']
-#     port_number = request.form['port_number']
-#     # You can customize this command as per your requirements
-#     command = f"powershell Start-Process ssh -ArgumentList 'username@{ip_address} -p {port_number}'"
-#     subprocess.Popen(command, shell=True)
-#     return 'SSH session initiated successfully'
 
 if __name__ == '__main__':
     app.run(debug=True)
